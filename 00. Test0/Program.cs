@@ -130,6 +130,52 @@ namespace _00.Test0
                 }
 
             }
+
+            // How to get info about the constructors
+
+            var typeOfWhale = typeof(Whale);
+
+            ConstructorInfo[] cons = typeOfWhale.GetConstructors();
+
+            foreach (var constructor in cons)
+            {
+               
+                var parametars = constructor.GetParameters();
+
+                foreach (var param in parametars)
+                {
+                   
+                    Console.WriteLine(param.Name);
+                    Console.WriteLine(param.ParameterType.Name);
+                }
+                Console.WriteLine("-------");
+
+            }
+
+            // Calling construktors
+
+            //1. Empty
+            var emptyConstructor = typeof(Whale).GetConstructor(Type.EmptyTypes);
+
+            //2. Constructor with parameters
+
+            var constructorWithParametars = typeof(Whale).GetConstructor(new[] { typeof(string), typeof(double) });
+
+            var whale = constructorWithParametars.Invoke(new object[] { "Kosatka", 4.5 });
+
+
+
+            //how to get the methods
+
+            MethodInfo []methods = typeof(Whale).GetMethods(BindingFlags.Instance|BindingFlags.NonPublic);
+            var whaleInstance = new Whale("Kosatka",7.9);
+            var invokedMethod = methods.Where(m => m.Name == "MakeSound").First().Invoke(whaleInstance, new object[0]); //new object[0] защото методът няма параметри
+            Console.WriteLine(invokedMethod);
+
+            //Ако методът приема параметри
+
+            var invokedMethodII = methods.Where(m => m.Name == "CalculateWeight").First().Invoke(whaleInstance, new object[] { 8.9 });
+            Console.WriteLine(invokedMethodII);
         }
 
 

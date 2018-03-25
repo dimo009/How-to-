@@ -11,8 +11,11 @@ namespace _00.Test0
         private string name;
         private int numberOfLegs;
 
-       
 
+        protected Animal()
+        {
+
+        }
         protected Animal(string name, int numberOfLegs)
         {
             this.Name = name;
