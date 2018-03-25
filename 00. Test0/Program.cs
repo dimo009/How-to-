@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace _00.Test0
         static void Main(string[] args)
         {
             var dog = new Dog("Sharo");
-            
+
             Type typeOfDog = typeof(Dog);
             var typeOfAnimal = typeof(Animal);
             Type typeOfMops = typeof(Mops);
@@ -44,7 +45,7 @@ namespace _00.Test0
 
             var baseType = typeOfMops.BaseType;
 
-            while (baseType!=typeof(object))
+            while (baseType != typeof(object))
             {
                 Console.WriteLine(baseType.Name);
                 baseType = baseType.BaseType;
@@ -65,8 +66,87 @@ namespace _00.Test0
                 Console.WriteLine(item.Name);
             }
 
+            Console.WriteLine();
+            Console.WriteLine("How to istantiate anything...?");
 
+            // След тайпъф, трябва да се подадат елементите на конструктора
+            var dogActivator = (Dog)Activator.CreateInstance(typeof(Dog), "Joro");
+
+            //обаче
+
+            Console.WriteLine(dogActivator.ToString());
+
+            //var dogWithNewInstance = New<Dog>.Instance;
+            //dogWithNewInstance.Name = "Kiro";
+            //Console.WriteLine(dogWithNewInstance.ToString());
+
+
+            // Hoow to take info regarding classes, properties etc
+            var fields = typeOfAnimal.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+
+            foreach (var field in fields)
+            {
+                Console.WriteLine(field.Name);
+            }
+
+
+
+            // How to set value of a field:
+
+            // 1. Create a new instance of a class
+
+            var dogRoro = new Dog("Roro");
+
+            //2. Find the fileds
+
+            var dogFields = typeOfAnimal.GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+
+            foreach (var field in dogFields)
+            {
+                Console.WriteLine(field.Name);
+
+                if (field.Name.Contains("name"))
+                {
+                    Console.WriteLine("First value of the name of the dog");
+                    Console.WriteLine(dogRoro.Name);
+                    field.SetValue(dogRoro, "Misho");
+                    Console.WriteLine("New value of dog's name");
+                    Console.WriteLine(dogRoro.Name);
+                }
+            }
+            Console.WriteLine();
+            //How to get the proeprties of a class
+
+            //1. 
+            PropertyInfo[] properties = typeOfDog.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+            foreach (var prop in properties)
+            {
+                Console.WriteLine(prop.Name);
+                if (prop.Name.ToLower().Contains("name"))
+                {
+                    prop.SetValue(dogRoro, "Spas");
+                    Console.WriteLine(dogRoro.Name);
+                }
+
+            }
         }
+
+
+
+
+        // How to instantiate new instance of a class
+        //Option one - consumes memory and works only with empty constructor
+        public class New<T>
+        {
+            public static T Instance = Expression.Lambda<Func<T>>(Expression.New(typeof(T))).Compile()();
+        }
+
+        
+       
+
+      
+
     }
 
     

@@ -21,7 +21,7 @@ namespace _00.Test0
         public string Name
         {
             get { return name; }
-            private set { name = value; }
+             set { name = value; }
         }
 
         public int NumberOfLegs

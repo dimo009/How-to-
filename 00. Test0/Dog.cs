@@ -11,5 +11,13 @@ namespace _00.Test0
        public Dog(string name) : base(name,numberOfLegs: 4)
         {
         }
+
+        public override string ToString()
+        {
+            return $"{this.Name} -> {this.NumberOfLegs}";
+
+        }
     }
+
+
 }
